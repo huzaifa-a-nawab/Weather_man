@@ -59,27 +59,29 @@ class WeatherMan
     end
 
     def bar_chart_high
-        puts "+".red
+        print "+".red
     end
 
     def bar_chart_low
-        puts "-".blue
+        print "-".blue
     end
 
     def report_3
         puts "\nReport 3:"
-        Dir.glob("**/*March*.txt") do |file|
+        Dir.glob("**/*2011*Mar*.txt") do |file|
             CSV.open(file, :col_sep=>",").each do |row|
-              @high_temp_day = 0, @low_temp_day= 100  
-              if (row[2].to_i > @high_temp_day || row[2].to_i == @high_temp_day)
+              if (row[1].to_i > @high_temp_day || row[1].to_i == @high_temp_day)
                 @high_temp_day = row[2].to_i
               end
-
-              if (row[2].to_i < @low_temp_day || row[2].to_i == @low_temp_day)
+              if (row[3].to_i < @low_temp_day || row[3].to_i == @low_temp_day)
                 @low_temp_day = row[2].to_i
               end
-              puts "Day: #{row[0]} \n#{@high_temp_day.times do (bar_chart_high()) end }C", "\n#{@low_temp_day.times do (bar_chart_low()) end }C"
+              puts "\nDay: #{row[0]}"
+              puts "\n#{@high_temp_day.times do (bar_chart_high()) end }C"
+              puts "\n#{@low_temp_day.times do (bar_chart_low()) end }C" 
             end
+            @high_temp_day = 0
+            @low_temp_day = 100
         end
     end
 end
