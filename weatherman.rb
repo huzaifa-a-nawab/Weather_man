@@ -1,5 +1,6 @@
 class WeatherMan
     require 'csv'
+    require 'colorize'
 
     def initialize
         @max_temp_year = 0
@@ -12,6 +13,8 @@ class WeatherMan
         @low_avg_temp_month = 100
         @avg_humidity_month = 0
         @row_count = 0
+        @high_temp_day = 0
+        @low_temp_day = 100
     end
 
     def report_1
@@ -54,7 +57,33 @@ class WeatherMan
         @avg_humidity_month = @avg_humidity_month / @row_count
         puts "\nReport 2\nHighest average: #{@high_avg_temp_month}C", "Lowest average: #{@low_avg_temp_month}C", "Average Humidity: #{@avg_humidity_month}%"
     end
+
+    def bar_chart_high
+        puts "+".red
+    end
+
+    def bar_chart_low
+        puts "-".blue
+    end
+
+    def report_3
+        puts "\nReport 3:"
+        Dir.glob("**/*March*.txt") do |file|
+            CSV.open(file, :col_sep=>",").each do |row|
+              @high_temp_day = 0, @low_temp_day= 100  
+              if (row[2].to_i > @high_temp_day || row[2].to_i == @high_temp_day)
+                @high_temp_day = row[2].to_i
+              end
+
+              if (row[2].to_i < @low_temp_day || row[2].to_i == @low_temp_day)
+                @low_temp_day = row[2].to_i
+              end
+              puts "Day: #{row[0]} \n#{@high_temp_day.times do (bar_chart_high()) end }C", "\n#{@low_temp_day.times do (bar_chart_low()) end }C"
+            end
+        end
+    end
 end
 
 WeatherMan.new.report_1
 WeatherMan.new.report_2
+WeatherMan.new.report_3
